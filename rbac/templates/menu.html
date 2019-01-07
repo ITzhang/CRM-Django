@@ -1,0 +1,15 @@
+<ul class="am-list admin-sidebar-list">
+    <li><a href="{% url 'index' %}"><span class="am-icon-home"></span> 首页</a></li>
+    {% for item in permission_menu_dict.values %}
+        <li class="admin-parent">
+            <a class="am-cf {{ item.menu_style.0 }}" data-am-collapse="{target: '#{{ item.menu_id }}'}"><span
+                    class="am-icon-file"></span>
+                {{ item.menu_title }} <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+            <ul class="am-list am-collapse admin-sidebar-sub {{ item.menu_style.1 }}" id="{{ item.menu_id }}">
+                {% for menu in item.secondary_menu %}
+                    <li class="{{ menu.url_style }}"><a href="{{ menu.url }}"><span class="am-icon-check"></span> {{ menu.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">权限菜单</strong> /
+            <small>权限管理</small>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6 am-form-group">
+            <div class="am-btn-toolbar">
+                <div class="am-btn-group am-btn-group-xs">
+
+                    <a class="am-btn am-btn-default"
+                       href="?action=add"><span
+                            class="am-icon-plus"></span>
+                        新增</a>
+                    <a class="am-btn am-btn-default"
+                       href="?action=edit"><span
+                            class="am-icon-plus"></span>
+                        编辑</a>
+                </div>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-3">
+            <div class="am-input-group am-input-group-sm">
+                <input type="text" class="am-form-field">
+                <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" type="button">搜索</button>
+          </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="am-g">
+        <div class="am-u-sm-12">
+            <form class="am-form" method="post">
+                {% csrf_token %}
+                {{ formset.management_form }}
+                <table class="am-table am-table-striped am-table-bordered am-table-hover table-main am-text-center">
+                    <thead>
+                    <tr>
+                        <th class="am-text-center">菜单名称</th>
+                        <th class="am-text-center">图标样式</th>
+                        <th class="am-text-center">菜单标签ID</th>
+                        {% if not parms %}
+                            <th class="am-text-center">url管理</th>
+                            <th class="am-text-center">删除</th>
+                        {% endif %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if 'add' in parms %}
+                        <tr>
+                            <td>{{ add_forms.title }}</td>
+                            <td>{{ add_forms.icon }}</td>
+                            <td>{{ add_forms.menu_id }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if 'edit' in parms %}
+                        {% for item in formset %}
+                            {{ item.id }}
+                            <tr>
+                                <td>{{ item.title }}</td>
+                                <td>{{ item.icon }}</td>
+                                <td>{{ item.menu_id }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        {% for item in menu_obj %}
+                            <tr>
+                                <td>{{ item.title }}</td>
+                                <td>{{ item.icon }}</td>
+                                <td>{{ item.menu_id }}</td>
+                                {% if not parms %}
+                                    <td><a href="{% url 'rbac:show_permission_url' item.pk %}?next={{ request.path }}">url详情</a>
+                                    </td>
+                                    <td>
+                                        <div class="am-btn-group am-btn-group-xs">
+                                            <a href="?del={{ item.pk }}"
+                                               onclick="if(confirm('删除后菜单下的所有url也会删除，确认删除吗？')==false)return false;"
+                                               class="am-btn am-btn-default am-btn-xs am-text-secondary">
+                                                删除
+                                            </a>
+                                        </div>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+                {% if parms %}
+                    <div class="am-g">
+                        <div class="am-u-sm-12 am-u-md-2 am-fr am-form-group">
+                            <div class="am-btn-group am-btn-group-xs am-fr">
+                                <a class="am-btn am-btn-default" href="?">取消</a>
+                                <input type="submit" class="am-btn am-btn-success">
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

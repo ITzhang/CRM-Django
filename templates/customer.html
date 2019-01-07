@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <style>
+        .btn-font-size {
+            font-size: 1.2rem !important;
+        }
+
+        .condition-btn {
+            margin-bottom: 5px;
+        }
+
+        .condition-box {
+            border: 1px solid #ddd;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">{{ label }}</strong> /
+            <small>客户管理</small>
+        </div>
+    </div>
+    <div class="am-g condition-box">
+        <div class="am-u-md-12 condition-btn">
+            <span class="btn-font-size">已报班级</span>
+            <a href="" class="am-btn am-btn-success btn-font-size">全部</a>
+            {% for item in class_list %}
+                <a href="" class="am-btn btn-font-size">{{ item }}</a>
+            {% endfor %}
+        </div>
+
+        <div class="am-u-md-12 condition-btn">
+            <span class="btn-font-size">状态</span>
+            <a href="" class="am-btn am-btn-success btn-font-size">全部</a>
+            {% for item in status %}
+                <a href="?a=123" class="am-btn btn-font-size">{{ item.1 }}</a>
+            {% endfor %}
+        </div>
+
+        <div class="am-u-md-12 condition-btn">
+            <span class="btn-font-size">销售</span>
+            <a href="?/consultant_id=" class="am-btn am-btn-success btn-font-size">全部</a>
+            {% for item in consultrecord_list %}
+                <a href="?consultant_id={{ item.pk }}&{{ url_parms }}"
+                   class="am-btn btn-font-size">{{ item.username }}</a>
+            {% endfor %}
+        </div>
+
+    </div>
+    <hr>
+
+    <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6">
+            <div class="am-btn-toolbar">
+                <div class="am-btn-group am-btn-group-xs">
+                    {% csrf_token %}
+                    <a class="am-btn am-btn-default"
+                       href="{% url 'customer_add' %}?next={{ request.path }}"><span
+                            class="am-icon-plus"></span>
+                        新增</a>
+                </div>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-3">
+            <div class="am-form-group">
+                <select data-am-selected="{btnSize: 'sm'}">
+                    <option value="option1">所有类别</option>
+                    <option value="option2">IT业界</option>
+                    <option value="option3">数码产品</option>
+                    <option value="option3">笔记本电脑</option>
+                    <option value="option3">平板电脑</option>
+                    <option value="option3">只能手机</option>
+                    <option value="option3">超极本</option>
+                </select>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-3">
+            <div class="am-input-group am-input-group-sm">
+                <input type="text" class="am-form-field">
+                <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" type="button">搜索</button>
+          </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="am-g">
+        <div class="am-u-sm-12">
+            <form class="am-form">
+                <table class="am-table am-table-striped am-table-bordered am-table-hover table-main am-text-center">
+                    <thead>
+                    <tr>
+                        <th class="table-check">
+                            <input type="checkbox"/>
+                        </th>
+                        <th class="am-text-center">ID</th>
+                        <th class="am-text-center">客户姓名</th>
+                        <th class="am-text-center">性别</th>
+                        <th class="am-text-center">QQ</th>
+                        <th class="am-text-center">手机号</th>
+                        <th class="am-text-center">客户来源</th>
+                        <th class="am-text-center">当前状态</th>
+                        <th class="am-text-center">销售</th>
+                        <th class="am-text-center">所报班级</th>
+                        <th class="am-text-center">跟进记录</th>
+
+                        <th class="am-text-center">操作</th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for customer in customer_list %}
+                        <tr>
+                            <td><input type="checkbox" id="" value="{{ customer.pk }}"/></td>
+                            <td>{{ customer.page_num }}</td>
+                            <td>{{ customer.name }}</td>
+                            <td>{{ customer.get_sex_display }}</td>
+                            <td>{{ customer.qq }}</td>
+                            <td>{{ customer.phone|default:'暂无' }}</td>
+                            <td>{{ customer.get_source_display }}</td>
+                            <td>{{ customer.get_status_display }}</td>
+                            <td>{{ customer.consultant|default:'暂无' }}</td>
+                            <td>{{ customer.get_class }}</td>
+                            <td><a href="{% url 'consult_record' %}?cid={{ customer.pk }}">跟进记录</a></td>
+                            <td>
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+
+                                        <a href="{% url 'customer_edit' customer.pk %}?next={{ request.path }}&page={{ current_page_num }}"
+                                           class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                class="am-icon-pencil-square-o"></span> 编辑
+                                        </a>
+                                        <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span
+                                                class="am-icon-trash-o"></span> 删除
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+
+
+                    </tbody>
+                </table>
+                <div class="am-cf">
+                    共 {{ counter }} 条记录
+                    <div class="am-fr am-center">
+                        <ul class="am-pagination">
+                            {{ page_html|safe }}
+                        </ul>
+                    </div>
+                </div>
+                <hr/>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script>
+        $(function () {
+            $('#reverse-gs').click(function () {
+                $.ajax({
+                    url: '',
+                    type: 'post',
+                    data: JSON.stringify({
+                        method: $('#reverse-gs').attr('method'),
+                        data: 123
+                    })
+
+                })
+            })
+        })
+    </script>
+{% endblock %}

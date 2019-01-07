@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">权限路由</strong> /
+            <small>权限管理</small>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6 am-form-group">
+            <div class="am-btn-toolbar">
+                <div class="am-btn-group am-btn-group-xs">
+
+                    <a class="am-btn am-btn-default"
+                       href="?action=add&next={% url 'rbac:show_permission_menu' %}"><span
+                            class="am-icon-plus"></span>
+                        新增</a>
+                    <a class="am-btn am-btn-default"
+                       href="?action=edit&next={% url 'rbac:show_permission_menu' %}"><span
+                            class="am-icon-plus"></span>
+                        编辑</a>
+                    <a class="am-btn am-btn-default"
+                       href="{% url 'rbac:show_permission_menu' %}"><span
+                            class="am-icon-plus"></span>
+                        返回</a>
+                </div>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-3">
+            <div class="am-input-group am-input-group-sm">
+                <input type="text" class="am-form-field">
+                <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" type="button">搜索</button>
+          </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="am-g">
+        <div class="am-u-sm-12">
+            <form class="am-form" method="post">
+                {% csrf_token %}
+                {{ formset.management_form }}
+                <table class="am-table am-table-striped am-table-bordered am-table-hover table-main am-text-center">
+                    <thead>
+                    <tr>
+                        <th class="am-text-center">url标题</th>
+                        <th class="am-text-center">url</th>
+                        <th class="am-text-center">菜单权限</th>
+                        <th class="am-text-center">所属菜单</th>
+                        <th class="am-text-center">url别名</th>
+                        {% if parms_length == 1 %}
+                            <th class="am-text-center">操作</th>
+                        {% endif %}
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if 'add' in parms %}
+                        <tr>
+                            <td>{{ add_forms.title }}</td>
+                            <td>{{ add_forms.url }}</td>
+                            <td>{{ add_forms.menu }}</td>
+                            <td>{{ add_forms.pid }}</td>
+                            <td>{{ add_forms.related_name }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if 'edit' in parms %}
+                        {% for item in formset %}
+                            {{ item.id }}
+                            {{ item.positions }}
+                            <tr>
+                                <td>{{ item.title }}</td>
+                                <td>{{ item.url }}</td>
+                                <td>{{ item.menu }}</td>
+                                <td>{{ item.instance.pid }}</td>
+                                <td>{{ item.related_name }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        {% for item in permission_url_list %}
+
+                            <tr>
+                                <td>{{ item.title }}</td>
+                                <td>{{ item.url }}</td>
+                                <td>{{ item.menu|default:'非菜单权限' }}</td>
+                                <td>{{ item.pid }}</td>
+                                <td>{{ item.related_name }}
+                                    {% if parms_length == 1 %}
+                                        <td>
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <a href="" class="am-btn am-btn-default am-btn-xs am-text-secondary">
+                                                    删除
+                                                </a>
+                                            </div>
+
+                                        </td>
+                                    {% endif %}
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+
+
+                    </tbody>
+                </table>
+                {% if parms_length > 1 %}
+                    <div class="am-g">
+                        <div class="am-u-sm-12 am-u-md-2 am-fr am-form-group">
+                            <div class="am-btn-group am-btn-group-xs am-fr">
+                                <a class="am-btn am-btn-default"
+                                   href="?next={% url 'rbac:show_permission_menu' %}">取消</a>
+                                <input type="submit" class="am-btn am-btn-success">
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+            </form>
+        </div>
+    </div>
+{% endblock %}

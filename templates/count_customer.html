@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">销售统计</strong> /
+            <small>统计管理</small>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6">
+            <div class="am-btn-toolbar">
+                <div class="am-btn-group am-btn-group-xs">
+                    {% csrf_token %}
+                    <a class="am-btn am-btn-default" href="?date=today"><span
+                            class="am-icon-plus"></span>
+                        今日成单数据</a>
+                    <a class="am-btn am-btn-default" href="?date=yesterday"><span
+                            class="am-icon-plus"></span>
+                        昨天成单数据</a>
+                    <a class="am-btn am-btn-default" href="?date=week"><span
+                            class="am-icon-plus"></span>
+                        一周成单数据</a>
+                    <a class="am-btn am-btn-default" href="?date=month"><span
+                            class="am-icon-plus"></span>
+                        一月成单数据</a>
+
+                </div>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-3">
+            <div class="am-form-group">
+                <select data-am-selected="{btnSize: 'sm'}">
+                    <option value="option1">所有类别</option>
+                    <option value="option2">IT业界</option>
+                    <option value="option3">数码产品</option>
+                    <option value="option3">笔记本电脑</option>
+                    <option value="option3">平板电脑</option>
+                    <option value="option3">只能手机</option>
+                    <option value="option3">超极本</option>
+                </select>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-3">
+            <div class="am-input-group am-input-group-sm">
+                <input type="text" class="am-form-field">
+                <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" type="button">搜索</button>
+          </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="am-g">
+        <div class="am-u-sm-12">
+            <form class="am-form">
+                <table class="am-table am-table-striped am-table-bordered am-table-hover table-main am-text-center">
+                    <thead>
+                    <tr>
+                        <th class="am-text-center">ID</th>
+                        <th class="am-text-center">客户姓名</th>
+                        <th class="am-text-center">性别</th>
+                        <th class="am-text-center">客户来源</th>
+                        <th class="am-text-center">销售</th>
+                        <th class="am-text-center">成交日期</th>
+                        <th class="am-text-center">所报班级</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for customer in customer_obj %}
+                        <tr>
+                            <td>{{ customer.page_num }}</td>
+                            <td>{{ customer.name }}</td>
+                            <td>{{ customer.get_sex_display }}</td>
+                            <td>{{ customer.get_source_display }}</td>
+                            <td>{{ customer.consultant }}</td>
+                            <td>{{ customer.deal_date|date:'Y-m-d' }}</td>
+                            <td>{{ customer.get_class }}</td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+                <div class="am-cf">
+                    共 {{ counter }} 条记录
+                    <div class="am-fr am-center">
+                        <ul class="am-pagination">
+                            {{ page_html|safe }}
+                        </ul>
+                    </div>
+                </div>
+                <hr/>
+            </form>
+        </div>
+    </div>
+    <div id="container" style="width:600px;height:400px"></div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="/static/highchart/highcharts.js"></script>
+    <script>
+        var chart = Highcharts.chart('container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '统计成单量'
+            },
+            subtitle: {
+                text: '数据截止 2017-03，来源: <a href="https://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+            },
+            xAxis: {
+                type: 'category',
+                labels: {
+                    rotation: 0  // 设置轴标签旋转角度
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '成单数'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                pointFormat: '成单人数: <b>{point.y} 单</b>'
+            },
+            series: [{
+                name: '总人口',
+                data: {{ ret|safe }},
+                dataLabels: {
+                    enabled: true,
+                    rotation: -90,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.1f}', // :.1f 为保留 1 位小数
+                    y: 10
+                }
+            }]
+        });
+
+    </script>
+{% endblock %}

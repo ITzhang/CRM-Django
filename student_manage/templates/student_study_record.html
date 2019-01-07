@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">学生课程进度</strong> /
+            <small>学生学习管理</small>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6">
+            <div class="am-btn-toolbar">
+                <div class="am-btn-group am-btn-group-xs">
+                    <a class="am-btn am-btn-default"
+                       href="{% url 'student_study_record_add' %}?next={{ request.path }}"><span
+                            class="am-icon-plus"></span>
+                        新增</a>
+                    <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="am-u-sm-12 am-u-md-3 am-form-group">
+            <div class="am-input-group am-input-group-sm">
+                <input type="text" class="am-form-field">
+                <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" type="button">搜索</button>
+          </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="am-g">
+        <div class="am-u-sm-12">
+            <form class="am-form" method="post">
+                <table class="am-table am-table-striped am-table-bordered am-table-hover table-main am-text-center">
+                    <thead>
+                    <tr>
+                        <th class="table-check">
+                            <input type="checkbox"/>
+                        </th>
+                        <th class="am-text-center">ID</th>
+                        <th class="am-text-center">姓名</th>
+                        <th class="am-text-center">节次</th>
+                        <th class="am-text-center">上课记录</th>
+                        <th class="am-text-center">分数</th>
+                        <th class="am-text-center">作业评语</th>
+                        <th class="am-text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for ssr in all_ssr %}
+                        <tr>
+                            <td><input type="checkbox" value="{{ ssr.pk }}" name="checked_csr"/></td>
+                            <td>{{ ssr.page_num }}</td>
+                            <td>{{ ssr.student }}</td>
+                            <td>{{ ssr.classstudyrecord }}天</td>
+                            <td>{{ ssr.get_record_display }}</td>
+                            <td>{{ ssr.score }}</td>
+                            <td>{{ ssr.homework_note }}</td>
+                            <td>
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <a href="{% url 'student_study_record_edit' ssr.pk %}?next={{ request.path }}"
+                                           class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                class="am-icon-pencil-square-o"></span> 编辑
+                                        </a>
+                                        <a href="{% url 'student_study_record_del' ssr.pk %}"
+                                           class="am-btn am-btn-danger am-btn-xs"><span
+                                                class="am-icon-trash-o"></span> 删除
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+
+                    </tbody>
+                </table>
+                <div class="am-cf">
+                    共 {{ counter }} 条记录
+                    <div class="am-fr am-center">
+                        <ul class="am-pagination">
+                            {{ page_html|safe }}
+                        </ul>
+                    </div>
+                </div>
+                <hr/>
+            </form>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script src="/static/js/app.js"></script>
+{% endblock %}

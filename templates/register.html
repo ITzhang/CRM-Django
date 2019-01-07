@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Login Page | Amaze UI Example</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="alternate icon" type="image/png" href="/static/i/favicon.png">
+    <link rel="stylesheet" href="/static/css/amazeui.min.css"/>
+    <style>
+        .header {
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 200%;
+            color: #333;
+        }
+
+        .header p {
+            font-size: 14px;
+        }
+
+        .reg-box {
+            position: relative;
+        }
+
+        .error {
+            position: absolute;
+            right: -130px;
+            top: 37px;
+            color: red;
+        }
+
+        .reg-a {
+            font-size: 1.4rem;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="am-g">
+        <h1>CRM</h1>
+        <p>Integrated Development Environment<br/>企业解决方法领导者</p>
+    </div>
+    <hr/>
+</div>
+<div class="am-g">
+    <div class="am-u-lg-4 am-u-md-6 am-u-sm-centered">
+        <form method="post" class="am-form form-with-tooltip" novalidate>
+            {% csrf_token %}
+            {% for form in forms %}
+                <div class="reg-box">
+                    <label for="">{{ form.label }}</label>
+                    {{ form }}
+                    <span class="error am-lg-text-left"></span>
+                </div>
+            {% endfor %}
+            <br/>
+            <div class="am-cf">
+                <input type="button" id="register-btn" name="" value="注 册"
+                       class="am-btn am-btn-primary am-btn-sm am-fl">
+            </div>
+            <div class="am-cf">
+                <a href="{% url 'login' %}" class="am-align-right reg-a">已有帐号？马上登录</a>
+            </div>
+        </form>
+        <hr>
+        <p>© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+    </div>
+</div>
+<script src="/static/js/jquery.min.js"></script>
+<script>
+    $(function () {
+        $('#register-btn').click(function () {
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: {
+                    csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
+                    username: $('#id_username').val(),
+                    password: $('#id_password').val(),
+                    confirm_password: $('#id_confirm_password').val(),
+                    email: $('#id_email').val(),
+                    tel: $('#id_tel').val(),
+
+                },
+                success: function (response) {
+                    if (response.username) {
+                        alert('注册成功！');
+                        location.href = '/login/'
+                    } else {
+                        $.each(response.error, function (i, j) {
+                            $('#id_' + i).css('border', '1px solid red').next().html(j);
+                        })
+                    }
+                }
+            })
+        });
+        $(' input').focus(function () {
+            $(this).css('border', '1px solid #ccc').next().html('')
+        });
+    })
+</script>
+</body>
+</html>

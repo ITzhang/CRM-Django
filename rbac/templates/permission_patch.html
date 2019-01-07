@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">权限分配</strong> /
+            <small>权限管理</small>
+        </div>
+    </div>
+    <hr>
+    <div class="am-g">
+        <div class="am-u-sm-3">
+            <div class="am-tab-panel">
+                <table class="am-table am-table-bordered am-table-radius">
+                    <tbody>
+                    <th>用户管理</th>
+                    <tr>
+                        <td>
+                            <ul>
+                                {% for user in user_list %}
+                                    <li>
+                                        {% if uid == user.pk %}
+                                            <a href="?uid={{ user.pk }}" style="color: red">{{ user }}</a>
+                                        {% else %}
+                                            <a href="?uid={{ user.pk }}">{{ user }}</a>
+                                        {% endif %}
+
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <div class="am-u-sm-4">
+            <div class="am-tab-panel">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="user_position">
+                    <input type="hidden" name="user_id" value="{{ uid }}">
+                    <table class="am-table am-table-bordered am-table-radius">
+                        <tbody>
+                        <th>部门职位管理</th>
+                        {% if uid %}
+                            <th><input type="submit" class="am-btn am-btn-success am-btn-sm"></th>
+                        {% endif %}
+                        {% for k,v in r_list.items %}
+                            <tr class="am-active">
+                                <td>
+                                    {{ k }}
+                                <td>
+                            </tr>
+
+                            <tr>
+
+                                <td>
+                                    {% for values in v %}
+                                        <div>
+                                            {% if values.pk in user_positions_list %}
+                                                <input type="checkbox" name="position" id="position_{{ values.pk }}"
+                                                       value="{{ values.pk }}" checked>
+                                            {% else %}
+                                                <input type="checkbox" name="position" id="position_{{ values.pk }}"
+                                                       value="{{ values.pk }}">
+                                            {% endif %}
+                                            {% if pid == values.pk %}
+                                                <a href="?pid={{ values.pk }}" style="color: red"><label
+                                                        for="">{{ values }}</label></a>
+                                            {% else %}
+                                                <a href="?pid={{ values.pk }}"><label
+                                                        for="">{{ values }}</label></a>
+
+                                            {% endif %}
+
+
+                                        </div>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+
+        </div>
+        <div class="am-u-sm-5">
+            <div class="am-tab-panel">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="position_permission">
+                    <input type="hidden" name="pid" value="{{ pid }}">
+
+                    <table class="am-table am-table-bordered am-table-radius">
+                        <tbody>
+                        <th>权限管理</th>
+                        {% if pid %}
+                            <th><input type="submit" class="am-btn am-btn-success am-btn-sm"></th>
+                        {% endif %}
+                        {% for k,v in p_list.items %}
+                            <tr class="am-active">
+                                <td>
+                                    {{ k }}
+                                <td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    {% for values in v %}
+                                        <div style="display: inline-block">
+                                            {% if values.pk in permission_list %}
+                                                <input type="checkbox" name="permission" id="permission_{{ values.pk }}"
+                                                       value="{{ values.pk }}" checked>
+                                            {% else %}
+                                                <input type="checkbox" name="permission" id="permission_{{ values.pk }}"
+                                                       value="{{ values.pk }}">
+                                            {% endif %}
+
+                                            <label for="permission_{{ values.pk }}">{{ values }}</label>
+                                        </div>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">跟进记录</strong> /
+            <small>客户管理</small>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6">
+            <div class="am-btn-toolbar">
+                <div class="am-btn-group am-btn-group-xs">
+                    <a class="am-btn am-btn-default" href="{% url 'consult_record_add' %}?next={{ request.path }}"><span
+                            class="am-icon-plus"></span>
+                        新增</a>
+                    <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!--
+        <div class="am-u-sm-12 am-u-md-3">
+            <div class="am-form-group">
+                <select data-am-selected="{btnSize: 'sm'}">
+                    <option value="option1">所有类别</option>
+                    <option value="option2">IT业界</option>
+                    <option value="option3">数码产品</option>
+                    <option value="option3">笔记本电脑</option>
+                    <option value="option3">平板电脑</option>
+                    <option value="option3">只能手机</option>
+                    <option value="option3">超极本</option>
+                </select>
+            </div>
+        </div>
+        -->
+
+        <div class="am-u-sm-12 am-u-md-3 am-form-group">
+            <div class="am-input-group am-input-group-sm">
+                <input type="text" class="am-form-field">
+                <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" type="button">搜索</button>
+          </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="am-g">
+        <div class="am-u-sm-12">
+            <form class="am-form">
+                <table class="am-table am-table-striped am-table-bordered am-table-hover table-main am-text-center">
+                    <thead>
+                    <tr>
+                        <th class="table-check">
+                            <input type="checkbox"/>
+                        </th>
+                        <th class="am-text-center">ID</th>
+                        <th class="am-text-center">客户姓名</th>
+                        <th class="am-text-center">当前状态</th>
+                        <th class="am-text-center">内容</th>
+                        <th class="am-text-center">日期</th>
+                        <th class="am-text-center">销售</th>
+                        <th class="am-text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in consult_record %}
+                        <tr>
+                            <td><input type="checkbox" value="{{ item.pk }}"/></td>
+                            <td>{{ item.page_num }}</td>
+                            <td>{{ item.customer }}</td>
+                            <td>{{ item.get_status_display }}</td>
+                            <td>{{ item.note }}</td>
+                            <td>{{ item.date|date:'Y-m-d' }}</td>
+                            <td>{{ item.consultant }}</td>
+
+                            <td>
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <a href="{% url 'consult_record_edit' item.pk %}?next={{ request.path }}"
+                                           class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                class="am-icon-pencil-square-o"></span> 编辑
+                                        </a>
+                                        <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span
+                                                class="am-icon-trash-o"></span> 删除
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+
+                    </tbody>
+                </table>
+                <div class="am-cf">
+                    共 {{ counter }} 条记录
+                    <div class="am-fr am-center">
+                        <ul class="am-pagination">
+                            {{ page_html|safe }}
+                        </ul>
+                    </div>
+                </div>
+                <hr/>
+            </form>
+        </div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">录入成绩</strong> /
+            <small>{{ title }}</small>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6">
+            <div class="am-btn-toolbar">
+                <div class="am-btn-group am-btn-group-xs">
+                    <a class="am-btn am-btn-default"
+                       href=""><span
+                            class="am-icon-plus"></span>
+                        新增</a>
+                    <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="am-u-sm-12 am-u-md-3 am-form-group">
+            <div class="am-input-group am-input-group-sm">
+                <input type="text" class="am-form-field">
+                <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" type="button">搜索</button>
+          </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="am-g">
+        <div class="am-u-sm-12">
+            <form class="am-form" method="post">
+                {% csrf_token %}
+                <table class="am-table am-table-striped am-table-bordered am-table-hover table-main am-text-center">
+                    <thead>
+                    <tr>
+                        <th class="table-check">
+                            <input type="checkbox"/>
+                        </th>
+                        <th class="am-text-center">ID</th>
+                        <th class="am-text-center">姓名</th>
+                        <th class="am-text-center">考勤</th>
+                        <th class="am-text-center">成绩</th>
+                        <th class="am-text-center">批语</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for ssr in ssr_obj %}
+                        <tr>
+                            <td><input type="checkbox" value="{{ ssr.pk }}" name="checked_csr" checked/></td>
+                            <td>{{ ssr.page_num }}</td>
+                            <td>{{ ssr.student }}</td>
+                            <td>{{ ssr.get_record_display }}</td>
+                            <td>{{ ssr.forms.score }}</td>
+                            <td>{{ ssr.forms.homework_note }}</td>
+                        </tr>
+                    {% endfor %}
+
+
+                    </tbody>
+                </table>
+                <div class="am-cf">
+                    共 {{ counter }} 条记录
+                    <div class="am-fr am-center">
+                        <ul class="am-pagination">
+                            {{ page_html|safe }}
+                        </ul>
+                    </div>
+                </div>
+                <hr/>
+                <input type="submit" class="am-btn am-btn-success" value="提交">
+            </form>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script src="/static/js/app.js"></script>
+{% endblock %}
